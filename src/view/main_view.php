@@ -27,7 +27,7 @@
     <!-- Barra Superior Fixa -->
     <div class="fixed-top bg-light py-2">
         <div class="container text-center">
-            <h1>Compras de Mercado</h1>
+            <h1>Compras</h1>
             <button id="addProductBtn" class="btn btn-primary mb-3">Adicionar Produto</button>
         </div>
     </div>
@@ -54,8 +54,8 @@
     </div>
 
     <!-- Total Fixo -->
-    <div class="fixed-bottom bg-light py-2">
-        <h2 class="text-center">Total: R$ <?= number_format($total, 2, ',', '.') ?></h2>
+    <div class="fixed-bottom bg-success py-2">
+        <h2 class="text-center text-white">Total: R$ <?= number_format($total, 2, ',', '.') ?></h2>
     </div>
 
     <!-- Modal -->
