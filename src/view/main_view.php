@@ -79,7 +79,7 @@
                             <textarea class="form-control" id="obs" name="obs"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="preco">Preço:</label>
+                            <label for="preco">Preço:::</label>
                             <input type="number" step="0.01" class="form-control" id="preco" name="preco" required>
                         </div>
                         <div class="form-group">
