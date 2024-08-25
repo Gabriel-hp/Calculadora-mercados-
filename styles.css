@@ -1,0 +1,74 @@
+/* Estilos gerais para o card */
+.card {
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 1.2rem;
+}
+
+.delete-btn {
+    background-color: #ff4c4c;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.delete-btn:hover {
+    background-color: #ff1c1c;
+}
+
+/* Media query para telas menores */
+@media (max-width: 768px) {
+    .card {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .card-title {
+        font-size: 1.3rem;
+    }
+
+    .card-text {
+        font-size: 1rem;
+    }
+
+    .delete-btn {
+        width: 100%;
+        padding: 12px 0;
+        text-align: center;
+        font-size: 1rem;
+    }
+}
+
+/* Media query para telas muito pequenas */
+@media (max-width: 576px) {
+    .card {
+        padding: 10px;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+    }
+
+    .delete-btn {
+        padding: 10px 0;
+        font-size: 0.9rem;
+    }
+}

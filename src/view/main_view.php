@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compras de Mercado</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
@@ -70,22 +70,27 @@
                 </div>
                 <div class="modal-body">
                     <form id="addProductForm" action="index.php?action=adicionar" method="post">
-                        <div class="form-group">
-                            <label for="nome_produto">Nome do Produto:</label>
-                            <input type="text" class="form-control" id="nome_produto" name="nome_produto" required>
+                    <div class="form-group">
+                        <label for="nome_produto">Nome do Produto:</label>
+                        <input type="text" class="form-control" id="nome_produto" name="nome_produto" required autocomplete="off">
+                        <div id="autocomplete-suggestions"></div> <!-- Exibe as sugestões aqui -->
+                    </div>
+
+                        <div class="row g-3">
+                            <div class="form-group col-6">
+                                <label for="preco">Preço:</label>
+                                <input type="number" step="0.01" class="form-control" id="preco" name="preco" required>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="qtd">Quatidade:</label>
+                                <input type="number" value="1" class="form-control" id="qtd" name="qtd" min="1" required>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="obs">Observação:</label>
                             <textarea class="form-control" id="obs" name="obs"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="preco">Preço:::</label>
-                            <input type="number" step="0.01" class="form-control" id="preco" name="preco" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="qtd">Quatidade:</label>
-                            <input type="number" value="1" class="form-control" id="qtd" name="qtd" min="1" required>
-                        </div>
+
                         <button type="submit" class="btn btn-primary">Adicionar Produto</button>
                     </form>
                 </div>
@@ -93,4 +98,29 @@
         </div>
     </div>
 </body>
+
+<script>
+    document.getElementById('nome_produto').addEventListener('keyup', function() {
+    let nomeProduto = this.value;
+    
+    if (nomeProduto.length >= 2) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', 'connect.php?q=' + nomeProduto, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                document.getElementById('autocomplete-suggestions').innerHTML = xhr.responseText;
+            }
+        };
+        xhr.send();
+    } else {
+        document.getElementById('autocomplete-suggestions').innerHTML = '';
+    }
+});
+
+function selectProduct(nomeProduto) {
+    document.getElementById('nome_produto').value = nomeProduto;
+    document.getElementById('autocomplete-suggestions').innerHTML = ''; // Limpa as sugestões
+}
+
+</script>
 </html>
