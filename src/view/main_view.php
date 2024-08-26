@@ -21,7 +21,33 @@
                 });
             });
         });
+
+        $(document).ready(function() {
+    // Ao clicar no botão de adicionar quantidade
+    $(".add-btn").click(function() {
+        var id = $(this).data("id");
+        $.post("index.php?action=adicionar", { id: id }, function(response) {
+            location.reload(); // Atualiza a página após a ação
+        });
+    });
+
+    // Ao clicar no botão de remover quantidade
+    $(".delete-btn").click(function() {
+        var id = $(this).data("id");
+        $.post("index.php?action=remover", { id: id }, function(response) {
+            location.reload(); // Atualiza a página após a ação
+        });
+    });
+});
+
     </script>
+
+<script>
+function alterarQuantidade(acao) {
+    document.getElementById('action').value = acao;
+    document.getElementById('form-qty').submit();
+}
+</script>
 </head>
 <body>
     <!-- Barra Superior Fixa -->
@@ -39,12 +65,21 @@
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title"><?= htmlspecialchars($produto['nome_produto']) ?></h5>
-                            <p class="card-text"><?= htmlspecialchars($produto['obs']) ?></p>
-                            <p class="card-text"><strong>Preço: R$ <?= htmlspecialchars($produto['preco']) ?></strong></p>
-                            <p class="card-text"><strong>Quantidade: <?= htmlspecialchars($produto['qtd']) ?></strong></p>
-                            <p class="card-text"><strong>Total: R$ <?= htmlspecialchars($produto['total']) ?></strong></p>
+                            <div class="left">
+                                <h5 class="card-title"><?= htmlspecialchars($produto['nome_produto']) ?></h5>
+                                <p class="card-text"><?= htmlspecialchars($produto['obs']) ?></p>
+                                <p class="card-text"><strong>Preço: R$ <?= htmlspecialchars($produto['preco']) ?></strong></p>
+                                <p class="card-total"><strong>Total: R$ <?= htmlspecialchars($produto['total']) ?></strong></p>
+                            </div>
+                            <div class="rigth">
+                            <div class="btn-org">
+                            <button type="button" class="btn btn-warning delete-btn" data-id="<?= $id_produto; ?>">-</button>
+                            <button type="button" class="btn btn-success add-btn" data-id="<?= $id_produto; ?>">+</button>
+                        </div>
+                            <p class="card-text"><strong>Qtd: <?= htmlspecialchars($produto['qtd']) ?></strong></p>
+                            
                             <button class="btn btn-danger delete-btn" data-id="<?= htmlspecialchars($produto['id']) ?>">Remover</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -99,28 +134,6 @@
     </div>
 </body>
 
-<script>
-    document.getElementById('nome_produto').addEventListener('keyup', function() {
-    let nomeProduto = this.value;
-    
-    if (nomeProduto.length >= 2) {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', 'connect.php?q=' + nomeProduto, true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                document.getElementById('autocomplete-suggestions').innerHTML = xhr.responseText;
-            }
-        };
-        xhr.send();
-    } else {
-        document.getElementById('autocomplete-suggestions').innerHTML = '';
-    }
-});
 
-function selectProduct(nomeProduto) {
-    document.getElementById('nome_produto').value = nomeProduto;
-    document.getElementById('autocomplete-suggestions').innerHTML = ''; // Limpa as sugestões
-}
 
-</script>
 </html>

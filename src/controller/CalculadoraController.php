@@ -27,6 +27,34 @@ class CalculadoraController {
         $stmt->execute();
     }
 
+    if (isset($_POST['id']) && isset($_GET['action'])) {
+        $id = $_POST['id'];
+        $action = $_GET['action'];
+    
+        if ($action === 'adicionar') {
+            $controller->addQtd($id);
+        } elseif ($action === 'remover') {
+            $controller->removeQtd($id);
+        }
+    
+        // Responder ao AJAX
+        echo json_encode(['success' => true]);
+    }
+    
+
+    public function addQtd($id) {
+        $stmt = $this->db->prepare("UPDATE `produtos` SET `qtd` = `qtd` + 1 WHERE `produtos`.`id` = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+    }
+    
+    public function removeQtd($id) {
+        $stmt = $this->db->prepare("UPDATE `produtos` SET `qtd` = `qtd` - 1 WHERE `produtos`.`id` = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+    }
+    
+
     public function calcularTotal() {
         $stmt = $this->db->prepare("SELECT SUM(total) as total FROM produtos");
         $stmt->execute();
