@@ -22,6 +22,21 @@
                 });
             });
 
+            $(".deleteall-btn").click(function() {
+                var id = $(this).data("id");
+                
+                // Exibe uma mensagem de confirmação ao usuário
+                var confirmacao = confirm("Você tem certeza que deseja remover todos os produtos? Esta ação não pode ser desfeita.");
+
+                // Se o usuário confirmar, a requisição POST é enviada
+                if (confirmacao) {
+                    $.post("index.php?action=removerall", { id: id }, function() {
+                        location.reload(); // Recarrega a página após a remoção
+                    });
+                }
+            });
+
+
             // Ao clicar no botão de adicionar quantidade
             $(".add-btn").click(function() {
                 var id = $(this).data("id");
@@ -37,6 +52,27 @@
                     location.reload(); // Atualiza a página após a ação
                 });
             });
+            $(document).ready(function(){
+    $('#input-produto').on('input', function() {
+        var query = $(this).val();
+
+        if (query.length > 2) { // Apenas busca se tiver mais de 2 caracteres
+            $.ajax({
+                url: 'connect.php',
+                method: 'GET',
+                data: { query: query },
+                success: function(response) {
+                    // Aqui você pode manipular a resposta para exibir os resultados
+                    $('#resultados').empty();
+                    $.each(response, function(index, produto) {
+                        $('#resultados').append('<h5 class="card-title">' + produto.nome_produto + '</h5>');
+                    });
+                }
+            });
+        }
+    });
+});
+
     });
     </script>
 
@@ -46,7 +82,9 @@
     <div class="fixed-top bg-light py-2">
         <div class="container text-center">
             <h1>Compras</h1>
-            <button id="addProductBtn" class="btn btn-primary mb-3">Adicionar Produto</button>
+            <button id="addProductBtn" class="btn btn-primary mb-3">Adicionar Produto</button> <br>
+            <button class="btn btn-dark deleteall-btn" data-id="<?= htmlspecialchars($produto['id']) ?>">Nova lista</button>
+            </script>
         </div>
     </div>
 
@@ -64,7 +102,9 @@
                                 <p class="card-total"><strong>Total: R$ <br> <?= number_format(htmlspecialchars($produto['total']), 2, ',', '.') ?></strong></p>
                             </div>
                             <div class="rigth">
+                            <p class="card-text"><strong>Quantidade</strong></p>
                             <div class="btn-org">
+                        
                                 <button type="button" class="btn btn-warning dim-btn" data-id="<?= htmlspecialchars($produto['id']) ?>">-</button>
                                 <p class="card-text"><strong><?= htmlspecialchars($produto['qtd']) ?></strong></p>
                                 <button type="button" class="btn btn-success add-btn" data-id="<?= htmlspecialchars($produto['id']) ?>">+</button>

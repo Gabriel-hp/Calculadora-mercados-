@@ -26,6 +26,11 @@ class CalculadoraController {
         $stmt->bind_param("i", $id);
         $stmt->execute();
     }
+
+    public function removerall($id) {
+        $stmt = $this->db->prepare("DELETE FROM produtos");
+        $stmt->execute();
+    }
     
 
     public function addQtd($id) {
