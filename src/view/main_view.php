@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compras de Mercado</title>
+    <title>Lista de compras</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
+
         $(document).ready(function() {
             $("#addProductBtn").click(function() {
                 $("#addProductModal").modal('show');
@@ -20,34 +21,25 @@
                     location.reload();
                 });
             });
-        });
 
-        $(document).ready(function() {
-    // Ao clicar no botão de adicionar quantidade
-    $(".add-btn").click(function() {
-        var id = $(this).data("id");
-        $.post("index.php?action=adicionar", { id: id }, function(response) {
-            location.reload(); // Atualiza a página após a ação
-        });
+            // Ao clicar no botão de adicionar quantidade
+            $(".add-btn").click(function() {
+                var id = $(this).data("id");
+                $.post("index.php?action=adicionarma", { id: id }, function(response) {
+                    location.reload(); // Atualiza a página após a ação
+                });
+            });
+
+            // Ao clicar no botão de diminui quantidade
+            $(".dim-btn").click(function() {
+                var id = $(this).data("id");
+                $.post("index.php?action=dim", { id: id }, function(response) {
+                    location.reload(); // Atualiza a página após a ação
+                });
+            });
     });
-
-    // Ao clicar no botão de remover quantidade
-    $(".delete-btn").click(function() {
-        var id = $(this).data("id");
-        $.post("index.php?action=remover", { id: id }, function(response) {
-            location.reload(); // Atualiza a página após a ação
-        });
-    });
-});
-
     </script>
 
-<script>
-function alterarQuantidade(acao) {
-    document.getElementById('action').value = acao;
-    document.getElementById('form-qty').submit();
-}
-</script>
 </head>
 <body>
     <!-- Barra Superior Fixa -->
@@ -68,15 +60,16 @@ function alterarQuantidade(acao) {
                             <div class="left">
                                 <h5 class="card-title"><?= htmlspecialchars($produto['nome_produto']) ?></h5>
                                 <p class="card-text"><?= htmlspecialchars($produto['obs']) ?></p>
-                                <p class="card-text"><strong>Preço: R$ <?= htmlspecialchars($produto['preco']) ?></strong></p>
-                                <p class="card-total"><strong>Total: R$ <?= htmlspecialchars($produto['total']) ?></strong></p>
+                                <p class="card-text"><strong>Preço: R$ <?= number_format(htmlspecialchars($produto['preco']), 2, ',', '.') ?></strong></p>
+                                <p class="card-total"><strong>Total: R$ <br> <?= number_format(htmlspecialchars($produto['total']), 2, ',', '.') ?></strong></p>
                             </div>
                             <div class="rigth">
                             <div class="btn-org">
-                            <button type="button" class="btn btn-warning delete-btn" data-id="<?= $id_produto; ?>">-</button>
-                            <button type="button" class="btn btn-success add-btn" data-id="<?= $id_produto; ?>">+</button>
-                        </div>
-                            <p class="card-text"><strong>Qtd: <?= htmlspecialchars($produto['qtd']) ?></strong></p>
+                                <button type="button" class="btn btn-warning dim-btn" data-id="<?= htmlspecialchars($produto['id']) ?>">-</button>
+                                <p class="card-text"><strong><?= htmlspecialchars($produto['qtd']) ?></strong></p>
+                                <button type="button" class="btn btn-success add-btn" data-id="<?= htmlspecialchars($produto['id']) ?>">+</button>
+                            </div>
+                            
                             
                             <button class="btn btn-danger delete-btn" data-id="<?= htmlspecialchars($produto['id']) ?>">Remover</button>
                             </div>
@@ -112,10 +105,11 @@ function alterarQuantidade(acao) {
                     </div>
 
                         <div class="row g-3">
-                            <div class="form-group col-6">
-                                <label for="preco">Preço:</label>
-                                <input type="number" step="0.01" class="form-control" id="preco" name="preco" required>
-                            </div>
+                        <div class="form-group col-6">
+                            <label for="preco">Preço:</label>
+                            <input type="number" step="0.01" class="form-control" id="preco" name="preco" min="0" required>
+                        </div>
+
                             <div class="form-group col-6">
                                 <label for="qtd">Quatidade:</label>
                                 <input type="number" value="1" class="form-control" id="qtd" name="qtd" min="1" required>

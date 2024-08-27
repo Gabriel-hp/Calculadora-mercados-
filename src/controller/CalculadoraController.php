@@ -26,34 +26,40 @@ class CalculadoraController {
         $stmt->bind_param("i", $id);
         $stmt->execute();
     }
-
-    if (isset($_POST['id']) && isset($_GET['action'])) {
-        $id = $_POST['id'];
-        $action = $_GET['action'];
-    
-        if ($action === 'adicionar') {
-            $controller->addQtd($id);
-        } elseif ($action === 'remover') {
-            $controller->removeQtd($id);
-        }
-    
-        // Responder ao AJAX
-        echo json_encode(['success' => true]);
-    }
     
 
     public function addQtd($id) {
         $stmt = $this->db->prepare("UPDATE `produtos` SET `qtd` = `qtd` + 1 WHERE `produtos`.`id` = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
-    }
-    
-    public function removeQtd($id) {
-        $stmt = $this->db->prepare("UPDATE `produtos` SET `qtd` = `qtd` - 1 WHERE `produtos`.`id` = ?");
+
+           // Atualizar o total
+        $stmt = $this->db->prepare("UPDATE produtos SET total = preco * qtd WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
     }
     
+    public function dimQtd($id) {
+        // Primeiro, obtenha a quantidade atual
+        $stmt = $this->db->prepare("SELECT qtd FROM produtos WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $produto = $result->fetch_assoc();
+        
+        // Verifique se a quantidade é maior que 0 antes de diminuir
+        if ($produto['qtd'] > 1) {
+            $stmt = $this->db->prepare("UPDATE produtos SET qtd = qtd - 1 WHERE id = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+        }
+
+        // Atualizar o total
+        $stmt = $this->db->prepare("UPDATE produtos SET total = preco * qtd WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+    }
+     
 
     public function calcularTotal() {
         $stmt = $this->db->prepare("SELECT SUM(total) as total FROM produtos");
